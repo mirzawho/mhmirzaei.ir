@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+@layer components {
+    body {
+        @apply flex flex-col w-screen h-svh m-0;
+    }
+
+    .font-fa {
+        font-family: "Vazirmatn", sans-serif;
+        font-optical-sizing: auto;
+    }
+
+    .font-en {
+        font-family: "Roboto", sans-serif;
+        font-optical-sizing: auto;
+        font-variation-settings: "wdth" 100;
+    }
+
+    .tooltip[data-tip]:before {
+        @apply rounded-2xl! text-xs! px-3! py-2!;
+    }
+
+    .contained {
+        @apply w-full mx-auto p-4 sm:max-w-lg md:max-w-2xl xl:max-w-3xl;
+    }
+}

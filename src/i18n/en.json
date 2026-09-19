@@ -1,0 +1,9 @@
+{
+    "lang": "en",
+    "dir": "ltr",
+    "title": "MH Mirzaei",
+
+    "bottomNavigationBar.contactTooltip": "Contact me",
+    "bottomNavigationBar.works": "Works",
+    "bottomNavigationBar.blog": "Articles"
+}

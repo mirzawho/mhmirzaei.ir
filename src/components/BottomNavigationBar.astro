@@ -1,0 +1,62 @@
+<div
+    class="sticky bottom-0 w-full h-32 flex flex-col items-center justify-center bg-linear-to-t from-base-300 to-base-100/0"
+>
+    <nav class="flex flex-nowrap items-center gap-2">
+        <div
+            class="text-neutral-content min-w-12 h-12 px-1 flex flex-nowrap items-center rounded-4xl bg-linear-to-t from-neutral/80 to-neutral shadow-lg shadow-neutral/24"
+        >
+            <a
+                href={"/" + Astro.currentLocale}
+                class="group"
+            >
+                <picture
+                    class="block size-10 rounded-full overflow-hidden bg-linear-to-t from-[#635C3B] to-[#7B7247]"
+                >
+                    <img
+                        src="/me.png"
+                        alt="Mohammad Hossein Mirzaei"
+                        class="w-full h-full object-cover object-center drop-shadow mt-2 transition-all duration-2000 ease-out group-hover:mt-1.5 group-hover:scale-110"
+                    />
+                </picture>
+            </a>
+
+            <a
+                href={"/" + Astro.currentLocale + "/works"}
+                class="px-3 h-10 flex items-center justify-center text-sm font-bold rounded-4xl transition-all hover:bg-white/10"
+            >
+                {Astro.locals.json["bottomNavigationBar.works"]}
+            </a>
+            <a
+                href={"/" + Astro.currentLocale + "/blog"}
+                class="px-3 h-10 flex items-center justify-center text-sm font-bold rounded-4xl transition-all hover:bg-white/10"
+            >
+                {Astro.locals.json["bottomNavigationBar.blog"]}
+            </a>
+        </div>
+
+        <div
+            class="tooltip"
+            data-tip={Astro.locals.json["bottomNavigationBar.contactTooltip"]}
+        >
+            <a
+                href={"/" + Astro.currentLocale + "/contact"}
+                class="btn btn-circle btn-lg bg-linear-to-t from-neutral/80 to-neutral border-0 shadow-lg shadow-neutral/24"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="22px"
+                    width="22px"
+                    viewBox="0 -960 960 960"
+                    fill="#ffffff"
+                    class={Astro.locals.json["dir"] == "rtl"
+                        ? "-scale-x-100"
+                        : ""}
+                >
+                    <path
+                        d="M176-183q-20 8-38-3.5T120-220v-180l320-80-320-80v-180q0-22 18-33.5t38-3.5l616 260q25 11 25 37t-25 37L176-183Z"
+                    ></path>
+                </svg>
+            </a>
+        </div>
+    </nav>
+</div>

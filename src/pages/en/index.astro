@@ -1,0 +1,103 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout>
+    <section class="flex flex-col gap-4 contained mx-auto mt-[20svh]">
+        <!-- profile -->
+        <div class="flex flex-nowrap items-center gap-4">
+            <picture
+                class="size-20 rounded-3xl overflow-hidden bg-linear-to-t from-[#635C3B] to-[#7B7247]"
+            >
+                <img
+                    src="/me.png"
+                    alt="Mohammad Hossein Mirzaei"
+                    class="w-full h-full object-cover object-center drop-shadow mt-2"
+                />
+            </picture>
+
+            <div class="flex flex-col">
+                <h1 class="font-bold">Mohammad Hossein Mirzaei</h1>
+                <p class="text-base-content/70">Software Engineer</p>
+            </div>
+        </div>
+
+        <!-- info -->
+        <div class="prose px-3 flex flex-col gap-4">
+            <p>
+                I'm Mohammad Hossein, a <b>creative and curious software engineer</b>.
+                I first became interested in programming in 2013 and started
+                working professionally in 2017. Since then, I've had the
+                opportunity to build a number of
+                <a
+                    href="/en/works"
+                    class="badge bg-base-300 mx-1 font-bold hover:text-primary hover:fill-primary"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="16px"
+                        width="16px"
+                        viewBox="0 -960 960 960"
+                    >
+                        <path
+                            d="M160-120q-33 0-56.5-23.5T80-200v-440q0-33 23.5-56.5T160-720h160v-80q0-33 23.5-56.5T400-880h160q33 0 56.5 23.5T640-800v80h160q33 0 56.5 23.5T880-640v440q0 33-23.5 56.5T800-120H160Zm240-600h160v-80H400v80Z"
+                        ></path>
+                    </svg>
+                    <span>projects</span>
+                </a>
+                and products.
+            </p>
+
+            <p>
+                In 2023, I also became interested in <b>psychology and
+                psychoanalysis</b>. This led me to explore the field of
+                 <b> health and well-being</b>, eventually inspiring me to
+                create
+                <a
+                    href="/en/works/asouda"
+                    class="badge bg-base-300 mx-1 font-bold hover:text-primary"
+                >
+                    <img
+                        src="https://asouda.com/wp-content/uploads/2026/08/icon-512x512-1-150x150.webp"
+                        alt="Asouda Logo"
+                        class="size-4"
+                    />
+                    <span>Asouda</span>
+                </a>
+                in 2026.
+            </p>
+        </div>
+
+        <!-- links -->
+        <div
+            class="flex flex-nowrap items-center gap-2 bg-base-300 rounded-2xl p-1 transition-all hover:rounded-full w-fit"
+        >
+            <!-- linkedin -->
+            <a
+                href="https://www.linkedin.com/in/mohammad-hossein-mirzaei-2772aa1ab/"
+                target="_blank"
+                class="btn btn-ghost btn-sm grow rounded-full"
+            >
+                Linkedin
+            </a>
+
+            <!-- dribbble -->
+            <a
+                href="https://dribbble.com/mhmirzaei/"
+                target="_blank"
+                class="btn btn-ghost btn-sm grow rounded-full"
+            >
+                Dribbble
+            </a>
+
+            <!-- github -->
+            <a
+                href="https://github.com/mirzawho/"
+                target="_blank"
+                class="btn btn-ghost btn-sm grow rounded-full"
+            >
+                Github
+            </a>
+        </div>
+    </section>
+</Layout>
