@@ -12,6 +12,7 @@ const localPath = (language = Astro.currentLocale) =>
 	lang={Astro.locals.json["lang"]}
 	dir={Astro.locals.json["dir"]}
 	data-theme="light"
+	class="transition-all"
 >
 	<head>
 		<meta charset="utf-8" />
@@ -29,7 +30,7 @@ const localPath = (language = Astro.currentLocale) =>
 
 		<script src="/script.js" is:inline></script>
 	</head>
-	<body class={`font-${Astro.currentLocale}`}>
+	<body class={`font-${Astro.currentLocale} transition-all`}>
 		<main class="flex-1">
 			<header
 				class="container mx-auto h-10 py-2 flex flex-nowrap items-center gap-1"

@@ -3,7 +3,7 @@
 
 @layer components {
     body {
-        @apply flex flex-col w-screen h-svh m-0;
+        @apply flex flex-col w-screen h-dvh m-0;
     }
 
     .font-fa {
