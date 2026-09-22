@@ -1,0 +1,17 @@
+---
+import Article from "../../../components/ArticleCard.astro";
+import Layout from "../../../layouts/Layout.astro";
+import blog from "../../../lib/blog";
+
+const posts = await blog.posts("en");
+---
+
+<Layout>
+    <section class="flex flex-col gap-4 contained mx-auto mt-[10svh]">
+        <div class="flex flex-col gap-2 mb-4">
+            <h1 class="text-2xl font-bold">My articles</h1>
+        </div>
+
+        {posts.map((post) => <Article post={post} />)}
+    </section>
+</Layout>

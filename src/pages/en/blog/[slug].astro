@@ -1,0 +1,85 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import blog from "../../../lib/blog";
+
+export async function getStaticPaths() {
+    const slugs = await blog.slugs("en");
+    return slugs.map((slug) => ({ params: { slug } }));
+}
+
+const slug = Array.isArray(Astro.params.slug)
+    ? Astro.params.slug.join("/")
+    : Astro.params.slug;
+
+if (!slug) {
+    return Astro.redirect("/en/blog");
+}
+
+const post = await blog.post("en", slug);
+
+if (!post || !post.content) {
+    return Astro.redirect("/en/blog");
+}
+
+const { content: Content } = post;
+---
+
+<Layout>
+    <article class="flex flex-col gap-4 contained mx-auto sm:mt-[10svh]">
+        <div class="flex flex-col p-2">
+            <h1 class="text-2xl font-bold">{post.title}</h1>
+            <div class="flex flex-wrap gap-2 text-xs mt-2">
+                <time class="flex flex-nowrap items-center gap-1">
+                    <!-- today icon -->
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="16px"
+                        viewBox="0 -960 960 960"
+                        width="16px"
+                    >
+                        <path
+                            d="M509-269q-29-29-29-71t29-71q29-29 71-29t71 29q29 29 29 71t-29 71q-29 29-71 29t-71-29ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-40q0-17 11.5-28.5T280-880q17 0 28.5 11.5T320-840v40h320v-40q0-17 11.5-28.5T680-880q17 0 28.5 11.5T720-840v40h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Z"
+                        ></path>
+                    </svg>
+
+                    {post.publishedAt.toLocaleDateString("en")}
+                </time>
+                {
+                    post.category && (
+                        <div class="size-1 bg-base-content/30 my-auto rounded-full"></div>
+                        <span>{post.category}</span>
+                    )
+                }
+                <div class="size-1 bg-base-content/30 my-auto rounded-full"></div>
+                <span>Mohammad Hossein Mirzaei</span>
+            </div>
+        </div>
+
+        {
+            post.thumbnail && (
+                <img
+                    src={post.thumbnail}
+                    alt={post.title}
+                    class="w-full rounded-xl"
+                />
+            )
+        }
+
+        <div class="prose p-2">
+            <Content />
+        </div>
+
+        <div class="flex flex-wrap gap-2 text-sm text-base-content/70 p-2">
+            {
+                post.tags.length > 0 &&
+                    post.tags.map((tag) => (
+                        <span>#{tag.split(" ").map((word) => { 
+                            let output = word.split('')
+                            output[0] = output[0].toUpperCase();
+                            return output.join('');
+                         }).join("_")}</span>
+                    ))
+            }
+        </div>
+    </article>
+</Layout>
