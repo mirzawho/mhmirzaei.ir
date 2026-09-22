@@ -7,10 +7,11 @@
  *
  * Site-wide defaults live in `SITE` below; per-page values always win.
  */
+import { resolveSiteUrl } from './site';
 
-/** Site-wide defaults. Keep in sync with `site` in astro.config.mjs. */
-const SITE = {
-	url: 'https://mhmirzaei.ir',
+/** Site-wide defaults. The URL comes from the shared site resolver. */
+export const SITE = {
+	url: resolveSiteUrl(),
 	name: 'MH Mirzaei',
 	defaultDescription: {
 		en: 'Personal website of Mohammad Hossein Mirzaei, software engineer.',
@@ -19,7 +20,7 @@ const SITE = {
 	defaultImage: '/me.png',
 	author: {
 		name: 'Mohammad Hossein Mirzaei',
-		url: 'https://mhmirzaei.ir/fa',
+		url: `${resolveSiteUrl()}/fa`,
 	},
 } as const;
 
@@ -194,9 +195,10 @@ function propertyTag(property: string, content: string): string {
 	return `<meta property="${escapeHtml(property)}" content="${escapeHtml(content)}" />`;
 }
 
-function linkTag(rel: string, href: string, hreflang?: string): string {
+function linkTag(rel: string, href: string, hreflang?: string, type?: string): string {
 	const hreflangAttribute = hreflang ? ` hreflang="${escapeHtml(hreflang)}"` : '';
-	return `<link rel="${escapeHtml(rel)}" href="${escapeHtml(href)}"${hreflangAttribute} />`;
+	const typeAttribute = type ? ` type="${escapeHtml(type)}"` : '';
+	return `<link rel="${escapeHtml(rel)}" href="${escapeHtml(href)}"${hreflangAttribute}${typeAttribute} />`;
 }
 
 function normalizeImage(image: string | SeoImage | undefined): SeoImage | undefined {
@@ -327,6 +329,8 @@ export function useSeo(input: UseSeoInput = {}): SeoResult {
 	tags.push(`<title>${escapeHtml(title)}</title>`);
 	tags.push(metaTag('description', description));
 	tags.push(linkTag('canonical', canonical));
+	// Curated Markdown map of the site for AI systems (https://llmstxt.org).
+	tags.push(linkTag('describedby', `${siteUrl}/llms.txt`, undefined, 'text/plain'));
 
 	const robots = [
 		input.noindex ? 'noindex' : 'index',

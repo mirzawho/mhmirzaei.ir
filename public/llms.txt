@@ -1,0 +1,22 @@
+# MH Mirzaei
+
+> Personal website of Mohammad Hossein Mirzaei, software engineer. Available in Persian and English.
+
+Main sections: Contact, Works, and Blog.
+
+## Pages
+- [محمد حسین میرزایی](https://mhmirzaei.ir/fa): وب‌سایت شخصی محمد حسین میرزایی، برنامه‌نویس.
+- [تماس با من](https://mhmirzaei.ir/fa/contact): راه‌های ارتباط با محمد حسین میرزایی.
+- [کار هام](https://mhmirzaei.ir/fa/works): پروژه‌ها و محصولات محمد حسین میرزایی.
+- [Mohammad Hossein Mirzaei](https://mhmirzaei.ir/en): Personal website of Mohammad Hossein Mirzaei, software engineer.
+- [Contact](https://mhmirzaei.ir/en/contact): How to reach Mohammad Hossein Mirzaei.
+- [Works](https://mhmirzaei.ir/en/works): Projects and products by Mohammad Hossein Mirzaei.
+
+## Blog
+- [مقاله‌های من](https://mhmirzaei.ir/fa/blog): مقاله‌ها و یادداشت‌های محمد حسین میرزایی درباره برنامه‌نویسی.
+- [My articles](https://mhmirzaei.ir/en/blog): Articles and notes by Mohammad Hossein Mirzaei on software engineering.
+- [Hello World](https://mhmirzaei.ir/en/blog/hello-world): This is my first article that i am writing on my weblog and i want to write about my works and my thoughts.
+- [سلام دنیا](https://mhmirzaei.ir/fa/blog/hello-world): این اولین مقاله من در وبلاگ خودم هستش که در مورد کار هایی که کردم و به چه چیز هایی فکر می کنم رو می نویسم.
+
+## Optional
+- [Sitemap](https://mhmirzaei.ir/sitemap.xml): Exhaustive machine-readable list of all public URLs.

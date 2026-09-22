@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://mhmirzaei.ir/en</loc>
+  </url>
+  <url>
+    <loc>https://mhmirzaei.ir/fa</loc>
+  </url>
+  <url>
+    <loc>https://mhmirzaei.ir/en/contact</loc>
+  </url>
+  <url>
+    <loc>https://mhmirzaei.ir/en/works</loc>
+  </url>
+  <url>
+    <loc>https://mhmirzaei.ir/fa/contact</loc>
+  </url>
+  <url>
+    <loc>https://mhmirzaei.ir/fa/works</loc>
+  </url>
+  <url>
+    <loc>https://mhmirzaei.ir/en/blog</loc>
+  </url>
+  <url>
+    <loc>https://mhmirzaei.ir/fa/blog</loc>
+  </url>
+  <url>
+    <loc>https://mhmirzaei.ir/en/blog/hello-world</loc>
+    <lastmod>2026-09-22T07:55:16.110Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mhmirzaei.ir/fa/blog/hello-world</loc>
+    <lastmod>2026-09-22T07:33:44.529Z</lastmod>
+  </url>
+</urlset>
