@@ -6,7 +6,21 @@ import blog from "../../../lib/blog";
 const posts = await blog.posts("en");
 ---
 
-<Layout>
+<Layout
+	seo={{
+		title: "My articles",
+		description:
+			"Articles and notes by Mohammad Hossein Mirzaei on software engineering.",
+		breadcrumbs: [
+			{ name: "Home", url: "/en" },
+			{ name: "Blog", url: "/en/blog" },
+		],
+		alternates: [
+			{ locale: "en", url: "/en/blog" },
+			{ locale: "fa", url: "/fa/blog" },
+		],
+	}}
+>
     <section class="flex flex-col gap-4 contained mx-auto mt-[10svh]">
         <div class="flex flex-col gap-2 mb-4">
             <h1 class="text-2xl font-bold">My articles</h1>

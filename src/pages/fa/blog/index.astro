@@ -6,7 +6,20 @@ import blog from "../../../lib/blog";
 const posts = await blog.posts("fa");
 ---
 
-<Layout>
+<Layout
+	seo={{
+		title: "مقاله‌های من",
+		description: "مقاله‌ها و یادداشت‌های محمد حسین میرزایی درباره برنامه‌نویسی.",
+		breadcrumbs: [
+			{ name: "خانه", url: "/fa" },
+			{ name: "وبلاگ", url: "/fa/blog" },
+		],
+		alternates: [
+			{ locale: "fa", url: "/fa/blog" },
+			{ locale: "en", url: "/en/blog" },
+		],
+	}}
+>
     <section class="flex flex-col gap-4 contained mx-auto mt-[10svh]">
         <div class="flex flex-col gap-2 mb-4">
             <h1 class="text-2xl font-bold">مقاله‌های من</h1>

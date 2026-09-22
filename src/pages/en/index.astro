@@ -2,7 +2,15 @@
 import Layout from "../../layouts/Layout.astro";
 ---
 
-<Layout>
+<Layout
+	seo={{
+		title: "Mohammad Hossein Mirzaei",
+		description:
+			"Personal website of Mohammad Hossein Mirzaei, software engineer.",
+		image: "/me.png",
+		imageAlt: "Mohammad Hossein Mirzaei",
+	}}
+>
     <section class="flex flex-col gap-4 contained mx-auto mt-[10svh] md:mt-[20svh]">
         <!-- profile -->
         <div class="flex flex-nowrap items-center gap-4">

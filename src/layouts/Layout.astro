@@ -1,16 +1,24 @@
 ---
 import BottomNavigationBar from "../components/BottomNavigationBar.astro";
+import { useSeo, type UseSeoInput } from "../lib/seo";
 
 import "../styles/global.css";
 
 const localPath = (language = Astro.currentLocale) =>
 	`/${language}/${Astro.originPathname.slice(4)}`;
+
+const { seo: seoInput } = Astro.props as { seo?: UseSeoInput };
+const seo = useSeo({
+	locale: Astro.currentLocale ?? undefined,
+	url: Astro.url,
+	...seoInput,
+});
 ---
 
 <!doctype html>
 <html
-	lang={Astro.locals.json["lang"]}
-	dir={Astro.locals.json["dir"]}
+	lang={seo.lang}
+	dir={seo.dir}
 	data-theme="light"
 	class="transition-all"
 >
@@ -19,7 +27,9 @@ const localPath = (language = Astro.currentLocale) =>
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>{Astro.locals.json["title"]}</title>
+		<title>{seo.title}</title>
+		<Fragment set:html={seo.head} />
+		<Fragment set:html={seo.jsonLd} />
 
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
