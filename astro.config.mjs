@@ -8,7 +8,7 @@ export default defineConfig({
   site: 'https://mhmirzaei.ir',
   i18n: {
     locales: ["fa", "en"],
-    defaultLocale: "fa",
+    defaultLocale: "en",
     routing: {
       prefixDefaultLocale: true
     }

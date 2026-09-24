@@ -3,6 +3,11 @@
     "dir": "ltr",
     "title": "MH Mirzaei",
 
+    "layout.skipToContent": "Skip to main content",
+    "layout.primaryNav": "Site",
+    "layout.changeLanguage": "Change language",
+    "layout.changeTheme": "Change theme",
+
     "bottomNavigationBar.contactTooltip": "Contact me",
     "bottomNavigationBar.works": "Works",
     "bottomNavigationBar.blog": "Articles"

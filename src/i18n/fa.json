@@ -3,6 +3,9 @@
     "dir": "rtl",
     "title": "م.ح میرزایی",
 
+    "layout.skipToContent": "پرش به محتوای اصلی",
+    "layout.primaryNav": "سایت",
+    "layout.changeLanguage": "تغییر زبان",
     "layout.changeTheme": "تغییر مود",
 
     "bottomNavigationBar.contactTooltip": "تماس با من",

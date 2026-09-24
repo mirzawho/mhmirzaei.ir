@@ -1,20 +1,24 @@
 <footer
     class="sticky bottom-0 w-full h-32 min-h-32 mt-20 flex flex-col items-center justify-center bg-linear-to-t from-base-300 to-base-100/0 transition-all"
 >
-    <nav class="flex flex-nowrap items-center gap-2">
+    <nav
+        class="flex flex-nowrap items-center gap-2"
+        aria-label={Astro.locals.json["bottomNavigationBar.works"]}
+    >
         <div
             class="text-neutral-content min-w-12 h-12 px-1 flex flex-nowrap items-center rounded-4xl bg-linear-to-t from-neutral/80 to-neutral shadow-lg shadow-neutral/24 backdrop-blur-xs"
         >
             <a
                 href={"/" + Astro.currentLocale}
                 class="group"
+                aria-label="Mohammad Hossein Mirzaei"
             >
                 <picture
                     class="block size-10 rounded-full overflow-hidden bg-linear-to-t from-[#635C3B] to-[#7B7247]"
                 >
                     <img
-                        src="/me.png"
-                        alt="Mohammad Hossein Mirzaei"
+                        src="/images/me_50x50.webp"
+                        alt=""
                         class="w-full h-full object-cover object-center drop-shadow mt-2 transition-all duration-2000 ease-out group-hover:mt-1.5 group-hover:scale-110"
                     />
                 </picture>
@@ -41,6 +45,7 @@
             <a
                 href={"/" + Astro.currentLocale + "/contact"}
                 class="btn btn-circle btn-lg bg-linear-to-t from-neutral/80 to-neutral border-0 shadow-lg shadow-neutral/24"
+                aria-label={Astro.locals.json["bottomNavigationBar.contactTooltip"]}
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"

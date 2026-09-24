@@ -17,10 +17,10 @@ export const SITE = {
 		en: 'Personal website of Mohammad Hossein Mirzaei, software engineer.',
 		fa: 'وب‌سایت شخصی محمد حسین میرزایی، برنامه‌نویس.',
 	},
-	defaultImage: '/me.png',
+	defaultImage: '/images/me_100x100.webp',
 	author: {
 		name: 'Mohammad Hossein Mirzaei',
-		url: `${resolveSiteUrl()}/fa`,
+		url: `${resolveSiteUrl()}/en`,
 	},
 } as const;
 
