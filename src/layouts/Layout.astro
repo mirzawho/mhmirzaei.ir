@@ -16,12 +16,7 @@ const seo = useSeo({
 ---
 
 <!doctype html>
-<html
-	lang={seo.lang}
-	dir={seo.dir}
-	data-theme="light"
-	class="transition-all"
->
+<html lang={seo.lang} dir={seo.dir} data-theme="light" class="transition-all w-dvw h-dvh">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
@@ -41,10 +36,10 @@ const seo = useSeo({
 		<script src="/script.js" is:inline></script>
 	</head>
 	<body class={`font-${Astro.currentLocale} transition-all`}>
-		<main class="flex-1">
-			<header
-				class="container mx-auto h-10 py-2 flex flex-nowrap items-center gap-1"
-			>
+		<header
+			class="w-screen h-10 fixed top-0 left-0 right-0 bg-linear-to-b from-base-100 to-base-100/0"
+		>
+			<nav class="flex flex-nowrap items-center gap-1 px-2 h-full w-full md:container md:mx-auto">
 				<div class="flex-1"></div>
 				<!-- change language -->
 				<button
@@ -62,13 +57,13 @@ const seo = useSeo({
 					dir="ltr"
 				>
 					<li>
-						<a href={localPath('fa')}>
+						<a href={localPath("fa")}>
 							<strong class="text-xs mr-2">FA</strong>
 							<span>Persian</span>
 						</a>
 					</li>
 					<li>
-						<a href={localPath('en')}>
+						<a href={localPath("en")}>
 							<strong class="text-xs mr-2">EN</strong>
 							<span>English</span>
 						</a>
@@ -111,8 +106,10 @@ const seo = useSeo({
 						></path></svg
 					>
 				</label>
-			</header>
+			</nav>
+		</header>
 
+		<main class="flex-1 pt-10">
 			<slot />
 		</main>
 
