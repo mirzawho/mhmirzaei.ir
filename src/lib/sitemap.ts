@@ -38,9 +38,12 @@ function collectEntries(siteUrl: string): SitemapEntry[] {
   const staticPages: SitemapEntry[] = [];
   const blogIndexes: SitemapEntry[] = [];
 
-  for (const route of collectPageRoutes(PAGES_DIR).sort()) {
-    const entry: SitemapEntry = { loc: siteUrl + route };
-    const segments = route.split('/').filter(Boolean);
+  for (const route of collectPageRoutes(PAGES_DIR).sort((a, b) => a.route.localeCompare(b.route))) {
+    const entry: SitemapEntry = {
+      loc: siteUrl + route.route,
+      lastmod: route.lastmod.toISOString(),
+    };
+    const segments = route.route.split('/').filter(Boolean);
     if (segments.length <= 1) {
       homes.push(entry);
     } else if (segments.length === 2 && segments[1] === 'blog') {
@@ -58,8 +61,11 @@ function collectEntries(siteUrl: string): SitemapEntry[] {
   ];
 }
 
-function collectPageRoutes(dir: string, base = ''): string[] {
-  const routes: string[] = [];
+function collectPageRoutes(
+  dir: string,
+  base = '',
+): { route: string; lastmod: Date }[] {
+  const routes: { route: string; lastmod: Date }[] = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     // `_`-prefixed files are not routes in Astro; dotfiles never are either.
     if (entry.name.startsWith('_') || entry.name.startsWith('.')) continue;
@@ -74,7 +80,11 @@ function collectPageRoutes(dir: string, base = ''): string[] {
     if (relative.split('/').some((segment) => segment.startsWith('['))) continue;
     // Pages that only redirect elsewhere are not indexable.
     if (isRedirectPage(path.join(dir, entry.name))) continue;
-    routes.push(routeFromFilePath(relative));
+    const filePath = path.join(dir, entry.name);
+    routes.push({
+      route: routeFromFilePath(relative),
+      lastmod: fs.statSync(filePath).mtime,
+    });
   }
   return routes;
 }
@@ -86,7 +96,9 @@ function isRedirectPage(filePath: string): boolean {
 function routeFromFilePath(relative: string): string {
   const withoutExtension = relative.replace(/\.(astro|md)$/, '');
   const withoutIndex = withoutExtension.replace(/\/?index$/, '');
-  return `/${withoutIndex}`;
+  // Ensure trailing slash so the sitemap matches Astro's default
+  // trailing-slash redirect behaviour and avoids 301s.
+  return withoutIndex === '' ? '/' : `/${withoutIndex}/`;
 }
 
 function collectBlogEntries(siteUrl: string): SitemapEntry[] {
@@ -99,7 +111,8 @@ function collectBlogEntries(siteUrl: string): SitemapEntry[] {
       path.join(CONTENT_DIR, locale),
     )) {
       entries.push({
-        loc: `${siteUrl}/${locale}/blog/${slug}`,
+        // Trailing slash matches the canonical URL after Astro's redirect.
+        loc: `${siteUrl}/${locale}/blog/${slug}/`,
         // Same date source as `publishedAt` in blog.ts.
         lastmod: mtime.toISOString(),
       });
