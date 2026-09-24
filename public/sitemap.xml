@@ -1,35 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://mhmirzaei.ir/en</loc>
+    <loc>https://mhmirzaei.ir/en/</loc>
+    <lastmod>2026-09-22T09:12:15.237Z</lastmod>
   </url>
   <url>
-    <loc>https://mhmirzaei.ir/fa</loc>
+    <loc>https://mhmirzaei.ir/fa/</loc>
+    <lastmod>2026-09-22T09:12:15.238Z</lastmod>
   </url>
   <url>
-    <loc>https://mhmirzaei.ir/en/contact</loc>
+    <loc>https://mhmirzaei.ir/en/contact/</loc>
+    <lastmod>2026-09-22T09:12:15.250Z</lastmod>
   </url>
   <url>
-    <loc>https://mhmirzaei.ir/en/works</loc>
+    <loc>https://mhmirzaei.ir/en/works/</loc>
+    <lastmod>2026-09-22T09:12:15.251Z</lastmod>
   </url>
   <url>
-    <loc>https://mhmirzaei.ir/fa/contact</loc>
+    <loc>https://mhmirzaei.ir/fa/contact/</loc>
+    <lastmod>2026-09-22T09:12:15.250Z</lastmod>
   </url>
   <url>
-    <loc>https://mhmirzaei.ir/fa/works</loc>
+    <loc>https://mhmirzaei.ir/fa/works/</loc>
+    <lastmod>2026-09-22T09:12:15.251Z</lastmod>
   </url>
   <url>
-    <loc>https://mhmirzaei.ir/en/blog</loc>
+    <loc>https://mhmirzaei.ir/en/blog/</loc>
+    <lastmod>2026-09-22T09:12:15.238Z</lastmod>
   </url>
   <url>
-    <loc>https://mhmirzaei.ir/fa/blog</loc>
+    <loc>https://mhmirzaei.ir/fa/blog/</loc>
+    <lastmod>2026-09-22T09:12:15.244Z</lastmod>
   </url>
   <url>
-    <loc>https://mhmirzaei.ir/en/blog/hello-world</loc>
+    <loc>https://mhmirzaei.ir/en/blog/hello-world/</loc>
     <lastmod>2026-09-22T07:55:16.110Z</lastmod>
   </url>
   <url>
-    <loc>https://mhmirzaei.ir/fa/blog/hello-world</loc>
+    <loc>https://mhmirzaei.ir/fa/blog/hello-world/</loc>
     <lastmod>2026-09-22T07:33:44.529Z</lastmod>
   </url>
 </urlset>

@@ -22,3 +22,8 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# SEO
+public/llm.txt
+public/robots.txt
+public/sitemap.xml
