@@ -3,11 +3,11 @@
  * systems, following the proposal at https://llmstxt.org/.
  *
  * Like `sitemap.ts`, this runs as a standalone Node script during the build,
- * so it cannot reuse `src/lib/blog.ts`: that module depends on Astro's
- * virtual `astro:content` module. Blog posts are therefore read from the
- * same `src/content/` layout and frontmatter schema that `content.config.ts`
- * defines, and page titles/descriptions come from each page's `seo` prop,
- * keeping those files the single source of truth.
+ * so it cannot reuse `src/lib/content.ts`: that module depends on Astro's
+ * virtual `astro:content` module. Content entries are therefore read from
+ * the same `src/content/<section>/` layout and frontmatter schema that
+ * `content.config.ts` defines, and page titles/descriptions come from each
+ * page's `seo` prop, keeping those files the single source of truth.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -17,14 +17,21 @@ import { SITE } from './seo';
 
 const PROJECT_ROOT = path.resolve(import.meta.dirname, '../..');
 const PAGES_DIR = path.join(PROJECT_ROOT, 'src/pages');
-const CONTENT_DIR = path.join(PROJECT_ROOT, 'src/content');
+const CONTENT_ROOT = path.join(PROJECT_ROOT, 'src/content');
+/** Content sections with detail pages, each a folder under `src/content/`. */
+const CONTENT_SECTIONS = ['blog', 'project'] as const;
+/** llms.txt heading for each content folder. */
+const SECTION_HEADINGS: Record<(typeof CONTENT_SECTIONS)[number], string> = {
+  blog: 'Blog',
+  project: 'Projects',
+};
 const OUTPUT_PATH = path.join(PROJECT_ROOT, 'public/llms.txt');
 
 /**
- * Upper bound on blog entries, keeping llms.txt concise; the sitemap stays
- * the exhaustive URL index.
+ * Upper bound on entries per section, keeping llms.txt concise; the sitemap
+ * stays the exhaustive URL index.
  */
-const MAX_BLOG_ENTRIES = 50;
+const MAX_SECTION_ENTRIES = 50;
 
 interface LinkEntry {
   title: string;
@@ -36,23 +43,33 @@ interface PostEntry extends LinkEntry {
   publishedAt: number;
 }
 
+interface SectionEntries {
+  indexes: LinkEntry[];
+  posts: PostEntry[];
+}
+
 export function generateLlmsTxt(): string {
   const siteUrl = resolveSiteUrl();
   const i18n = resolveI18nConfig();
 
   const pages: LinkEntry[] = [];
-  const blogIndexes: LinkEntry[] = [];
-  const posts: PostEntry[] = [];
+  const sections = new Map<(typeof CONTENT_SECTIONS)[number], SectionEntries>();
 
   for (const locale of i18n.locales) {
     const base = `${siteUrl}${localePrefix(locale, i18n)}`;
     pages.push(...collectLocalePages(locale, base));
-    collectBlog(locale, `${base}/blog`, blogIndexes, posts);
+    for (const section of CONTENT_SECTIONS) {
+      const entries = sections.get(section) ?? { indexes: [], posts: [] };
+      collectSection(locale, section, `${base}/${section}`, entries);
+      sections.set(section, entries);
+    }
   }
-  // Newest first, like `blog.ts`; the URL tiebreak keeps output deterministic.
-  posts.sort((a, b) => b.publishedAt - a.publishedAt || a.url.localeCompare(b.url));
+  for (const { posts } of sections.values()) {
+    // Newest first, like `content.ts`; the URL tiebreak keeps output deterministic.
+    posts.sort((a, b) => b.publishedAt - a.publishedAt || a.url.localeCompare(b.url));
+  }
 
-  return buildDocument(siteUrl, i18n, pages, blogIndexes, posts);
+  return buildDocument(siteUrl, i18n, pages, sections);
 }
 
 /** URL path prefix for a locale, honoring `prefixDefaultLocale`. */
@@ -117,27 +134,29 @@ function readSeoString(source: string, key: string): string | undefined {
   return undefined;
 }
 
-function collectBlog(
+function collectSection(
   locale: string,
-  blogBase: string,
-  indexes: LinkEntry[],
-  posts: PostEntry[],
+  section: string,
+  sectionBase: string,
+  entries: SectionEntries,
 ): void {
   const pagesDir = locale === '' ? PAGES_DIR : path.join(PAGES_DIR, locale);
-  // Articles are only routable when the locale has a blog section.
-  if (!fs.existsSync(path.join(pagesDir, 'blog'))) return;
+  // Content is only routable when the locale has a matching page section.
+  if (!fs.existsSync(path.join(pagesDir, section))) return;
 
-  const indexPage = path.join(pagesDir, 'blog', 'index.astro');
-  if (fs.existsSync(indexPage)) indexes.push(pageEntry(indexPage, blogBase));
+  const indexPage = path.join(pagesDir, section, 'index.astro');
+  if (fs.existsSync(indexPage)) {
+    entries.indexes.push(pageEntry(indexPage, sectionBase));
+  }
 
-  const contentDir = path.join(CONTENT_DIR, locale);
+  const contentDir = path.join(CONTENT_ROOT, section, locale);
   if (!fs.existsSync(contentDir)) return;
   for (const { slug, mtime } of collectContentSlugs(contentDir)) {
     const meta = readPostMeta(path.join(contentDir, slug, 'content.md'));
-    posts.push({
+    entries.posts.push({
       title: meta.title ?? slug,
       description: meta.description,
-      url: `${blogBase}/${slug}`,
+      url: `${sectionBase}/${slug}`,
       publishedAt: mtime.getTime(),
     });
   }
@@ -193,10 +212,8 @@ function buildDocument(
   siteUrl: string,
   i18n: I18nConfig,
   pages: LinkEntry[],
-  blogIndexes: LinkEntry[],
-  posts: PostEntry[],
+  sections: Map<(typeof CONTENT_SECTIONS)[number], SectionEntries>,
 ): string {
-  const shownPosts = posts.slice(0, MAX_BLOG_ENTRIES);
   const languages = i18n.locales
     .filter((locale) => locale !== '')
     .map((locale) => languageName(locale));
@@ -218,7 +235,10 @@ function buildDocument(
         .map((page) => page.url.slice(siteUrl.length).split('/').filter(Boolean))
         .filter((segments) => segments.length > 1)
         .map((segments) => segments[segments.length - 1] ?? ''),
-      ...(blogIndexes.length > 0 ? ['blog'] : []),
+      ...sections
+        .entries()
+        .filter(([, entries]) => entries.indexes.length > 0)
+        .map(([section]) => SECTION_HEADINGS[section]),
     ]),
   ]
     .filter((name) => name.length > 0)
@@ -227,21 +247,24 @@ function buildDocument(
   const context =
     sectionNames.length > 0 ? `Main sections: ${formatList(sectionNames)}.` : undefined;
 
-  const blogEntries: LinkEntry[] = [...blogIndexes, ...shownPosts];
-  const truncated = posts.length > shownPosts.length;
+  const sectionBlocks = [...sections.entries()].map(([section, entries]) => {
+    const shownPosts = entries.posts.slice(0, MAX_SECTION_ENTRIES);
+    const truncated = entries.posts.length > shownPosts.length;
+    return renderSection(
+      SECTION_HEADINGS[section],
+      [...entries.indexes, ...shownPosts],
+      truncated
+        ? `Showing the ${shownPosts.length} most recent entries; the complete list of URLs is available in the sitemap.`
+        : undefined,
+    );
+  });
 
-  const sections = [
+  const blocks = [
     `# ${SITE.name}`,
     `> ${blockquote}`,
     context,
     renderSection('Pages', pages),
-    renderSection(
-      'Blog',
-      blogEntries,
-      truncated
-        ? `Showing the ${shownPosts.length} most recent articles; the complete list of URLs is available in the sitemap.`
-        : undefined,
-    ),
+    ...sectionBlocks,
     renderSection('Optional', [
       {
         title: 'Sitemap',
@@ -251,7 +274,7 @@ function buildDocument(
     ]),
   ].filter((section) => section !== undefined && section !== '');
 
-  return `${sections.join('\n\n')}\n`;
+  return `${blocks.join('\n\n')}\n`;
 }
 
 function renderSection(

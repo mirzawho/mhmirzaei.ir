@@ -1,8 +1,8 @@
 ---
-import type { IBlogPost } from "../lib/blog";
+import type { IContentBlog } from "../lib/content";
 
 interface Props {
-    post: IBlogPost;
+    post: IContentBlog;
 }
 
 const { post } = Astro.props;
@@ -31,7 +31,7 @@ const locale = Astro.currentLocale ?? "en";
 
         <div class="flex flex-wrap gap-2 mt-2">
             <p
-                class="badge badge-ghost bg-base-300 fill-base-content text-base-content text-xs"
+                class="badge badge-ghost bg-base-300 fill-base-content text-base-content text-xs font-bold"
             >
                 <!-- today icon -->
                 <svg
@@ -52,7 +52,7 @@ const locale = Astro.currentLocale ?? "en";
             </p>
             {
                 post.category && (
-                    <span class="badge badge-ghost bg-base-300 fill-base-content text-base-content text-xs">
+                    <span class="badge badge-ghost bg-base-300 fill-base-content text-base-content text-xs font-bold">
                         {post.category}
                     </span>
                 )

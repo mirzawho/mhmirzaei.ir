@@ -1,9 +1,11 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
-import blog from "../../../lib/blog";
+import { MirzaContent, type IContentBlog } from "../../../lib/content";
+
+const blog = new MirzaContent<IContentBlog>("blog");
 
 export async function getStaticPaths() {
-    const slugs = await blog.slugs("fa");
+    const slugs = await new MirzaContent<IContentBlog>("blog").slugs("fa");
     return slugs.map((slug) => ({ params: { slug } }));
 }
 

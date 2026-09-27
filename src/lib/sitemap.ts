@@ -2,10 +2,10 @@
  * Generates `public/sitemap.xml` from the actual project structure.
  *
  * Runs as a standalone Node script during the build, so it cannot reuse
- * `src/lib/blog.ts`: that module depends on Astro's virtual `astro:content`
- * module, which only exists inside the Astro build pipeline. Blog slugs are
- * therefore derived from the same `src/content/` layout that the collection
- * loader in `content.config.ts` uses.
+ * `src/lib/content.ts`: that module depends on Astro's virtual `astro:content`
+ * module, which only exists inside the Astro build pipeline. Content slugs are
+ * therefore derived from the same `src/content/<section>/` layout that the
+ * collection loaders in `content.config.ts` use.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -14,7 +14,9 @@ import { resolveSiteUrl } from './site';
 
 const PROJECT_ROOT = path.resolve(import.meta.dirname, '../..');
 const PAGES_DIR = path.join(PROJECT_ROOT, 'src/pages');
-const CONTENT_DIR = path.join(PROJECT_ROOT, 'src/content');
+const CONTENT_ROOT = path.join(PROJECT_ROOT, 'src/content');
+/** Content sections with detail pages, each a folder under `src/content/`. */
+const CONTENT_SECTIONS = ['blog', 'project'] as const;
 const OUTPUT_PATH = path.join(PROJECT_ROOT, 'public/sitemap.xml');
 
 interface SitemapEntry {
@@ -36,7 +38,7 @@ export async function generateSitemap(): Promise<void> {
 function collectEntries(siteUrl: string): SitemapEntry[] {
   const homes: SitemapEntry[] = [];
   const staticPages: SitemapEntry[] = [];
-  const blogIndexes: SitemapEntry[] = [];
+  const sectionIndexes: SitemapEntry[] = [];
 
   for (const route of collectPageRoutes(PAGES_DIR).sort((a, b) => a.route.localeCompare(b.route))) {
     const entry: SitemapEntry = {
@@ -46,19 +48,33 @@ function collectEntries(siteUrl: string): SitemapEntry[] {
     const segments = route.route.split('/').filter(Boolean);
     if (segments.length <= 1) {
       homes.push(entry);
-    } else if (segments.length === 2 && segments[1] === 'blog') {
-      blogIndexes.push(entry);
+    } else if (segments.length === 2 && isContentSection(segments[1])) {
+      sectionIndexes.push(entry);
     } else {
       staticPages.push(entry);
     }
   }
 
-  return [
+  return dedupe([
     ...homes,
     ...staticPages,
-    ...blogIndexes,
-    ...collectBlogEntries(siteUrl),
-  ];
+    ...sectionIndexes,
+    ...collectContentEntries(siteUrl),
+  ]);
+}
+
+function isContentSection(name: string): boolean {
+  return (CONTENT_SECTIONS as readonly string[]).includes(name);
+}
+
+/** Keep the first entry per URL so a route can never be listed twice. */
+function dedupe(entries: SitemapEntry[]): SitemapEntry[] {
+  const seen = new Set<string>();
+  return entries.filter((entry) => {
+    if (seen.has(entry.loc)) return false;
+    seen.add(entry.loc);
+    return true;
+  });
 }
 
 function collectPageRoutes(
@@ -101,29 +117,32 @@ function routeFromFilePath(relative: string): string {
   return withoutIndex === '' ? '/' : `/${withoutIndex}/`;
 }
 
-function collectBlogEntries(siteUrl: string): SitemapEntry[] {
-  if (!fs.existsSync(CONTENT_DIR)) return [];
+function collectContentEntries(siteUrl: string): SitemapEntry[] {
   const entries: SitemapEntry[] = [];
-  for (const locale of listContentLocales()) {
-    // Articles are only routable when the locale has a blog section.
-    if (!fs.existsSync(path.join(PAGES_DIR, locale, 'blog'))) continue;
-    for (const { slug, mtime } of collectContentSlugs(
-      path.join(CONTENT_DIR, locale),
-    )) {
-      entries.push({
-        // Trailing slash matches the canonical URL after Astro's redirect.
-        loc: `${siteUrl}/${locale}/blog/${slug}/`,
-        // Same date source as `publishedAt` in blog.ts.
-        lastmod: mtime.toISOString(),
-      });
+  for (const section of CONTENT_SECTIONS) {
+    const sectionDir = path.join(CONTENT_ROOT, section);
+    if (!fs.existsSync(sectionDir)) continue;
+    for (const locale of listContentLocales(sectionDir)) {
+      // Content is only routable when the locale has a matching page section.
+      if (!fs.existsSync(path.join(PAGES_DIR, locale, section))) continue;
+      for (const { slug, mtime } of collectContentSlugs(
+        path.join(sectionDir, locale),
+      )) {
+        entries.push({
+          // Trailing slash matches the canonical URL after Astro's redirect.
+          loc: `${siteUrl}/${locale}/${section}/${slug}/`,
+          // Same date source as `publishedAt` in content.ts.
+          lastmod: mtime.toISOString(),
+        });
+      }
     }
   }
   return entries.sort((a, b) => a.loc.localeCompare(b.loc));
 }
 
-function listContentLocales(): string[] {
+function listContentLocales(sectionDir: string): string[] {
   return fs
-    .readdirSync(CONTENT_DIR, { withFileTypes: true })
+    .readdirSync(sectionDir, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
     .sort();

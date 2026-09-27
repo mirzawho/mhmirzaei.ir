@@ -1,0 +1,32 @@
+---
+import ProjectCard from "../../../components/ProjectCard.astro";
+import Layout from "../../../layouts/Layout.astro";
+
+import { MirzaContent, type IContentProject } from "../../../lib/content";
+
+const content = new MirzaContent<IContentProject>("project");
+const posts = await content.posts("fa");
+---
+
+<Layout
+	seo={{
+		title: "نمونه کار هام",
+		description: "پروژه‌ها و محصولات محمد حسین میرزایی.",
+		breadcrumbs: [
+			{ name: "خانه", url: "/fa" },
+			{ name: "نمونه کار ها", url: "/fa/project" },
+		],
+		alternates: [
+			{ locale: "fa", url: "/fa/project" },
+			{ locale: "en", url: "/en/project" },
+		],
+	}}
+>
+	<section class="flex flex-col gap-4 contained mx-auto mt-[10svh]">
+		<div class="flex flex-col gap-2 mb-4">
+			<h1 class="text-2xl font-bold">نمونه کار هام</h1>
+		</div>
+
+		{posts.map((post) => <ProjectCard post={post} />)}
+	</section>
+</Layout>

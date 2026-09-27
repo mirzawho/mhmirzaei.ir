@@ -1,0 +1,126 @@
+---
+import {
+    PROJECT_STATUS_COLORS,
+    PROJECT_STATUS_LABELS,
+    type IContentProject,
+} from "../lib/content";
+
+interface Props {
+    post: IContentProject;
+}
+
+const { post } = Astro.props;
+const locale = Astro.currentLocale ?? "en";
+
+const statusText = PROJECT_STATUS_LABELS[post.status]?.[locale] ?? post.status;
+const statusColor = PROJECT_STATUS_COLORS[post.status] ?? "badge-ghost";
+---
+
+<article class="flex flex-col gap-4 mb-4">
+    <div class="flex flex-col gap-1 px-2">
+        <div class="flex flex-nowrap items-center gap-2">
+            {
+                post.favicon && (
+                    <img src={post.favicon} alt={`${post.title} favicon`} class="size-8 rounded object-center object-cover"/>
+                )
+            }
+
+            <a
+                href={`/${locale}/project/${post.slug}`}
+                class="hover:text-primary focus-visible:outline focus-visible:outline-offset-4 focus-visible:outline-primary"
+            >
+                <h2 class="text-xl font-bold">{post.title}</h2>
+            </a>
+        </div>
+
+        <p class="text-base-content/70">{post.description}</p>
+
+        <div class="flex flex-wrap gap-1 mt-2">
+            {
+                post.technologies.map((item) => (
+                    <p class="badge badge-ghost bg-base-300 fill-base-content text-base-content text-xs font-bold">
+                        <span>{item.toUpperCase()}</span>
+                    </p>
+                ))
+            }
+
+            {
+                post.members && (
+                    <p class="badge badge-ghost bg-base-300 fill-base-content text-base-content text-xs font-bold">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="20px"
+                            width="20px"
+                            viewBox="0 -960 960 960"
+                        >
+                            <path d="M84-264q-15 0-25.5-10.5T48-300v-21q0-39 39-63t105-24q14 0 26 1t23 3q-12 18-18.5 39.11Q216-343.77 216-322v58H84Zm216 0q-15 0-25.5-10.5T264-300v-22q0-28 14.5-50t43.5-39q29-17 69-25t89.5-8q49.5 0 89 8t68.5 25q29 16 43.5 38.69Q696-349.62 696-322v22q0 15-10.5 25.5T660-264H300Zm444 0v-58q0-22-6.5-42.5T719-404q9-2 20.5-3t28.5-1q66 0 105 24t39 63v21q0 15-10.5 25.5T876-264H744ZM192-456q-30 0-51-21t-21-51q0-30 21-51t51-21q30 0 51 21t21 51q0 30-21 51t-51 21Zm576 0q-30 0-51-21t-21-51q0-30 21-51t51-21q30 0 51 21t21 51q0 30-21 51t-51 21Zm-288-36q-45 0-76.5-31.52T372-600.07q0-44.93 31.52-76.43 31.52-31.5 76.55-31.5 44.93 0 76.43 31.55Q588-644.9 588-600q0 45-31.55 76.5T480-492Z" />
+                        </svg>
+                        <span>
+                            {post.members}{" "}
+                            {locale === "fa" ? "عضو تیم" : "team members"}
+                        </span>
+                    </p>
+                )
+            }
+
+            {
+                post.start_at && (
+                    <p class="badge badge-ghost bg-base-300 fill-base-content text-base-content text-xs font-bold">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="16px"
+                            viewBox="0 -960 960 960"
+                            width="16px"
+                            aria-hidden="true"
+                        >
+                            <path d="M509-269q-29-29-29-71t29-71q29-29 71-29t71 29q29 29 29 71t-29 71q-29 29-71 29t-71-29ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-40q0-17 11.5-28.5T280-880q17 0 28.5 11.5T320-840v40h320v-40q0-17 11.5-28.5T680-880q17 0 28.5 11.5T720-840v40h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Z" />
+                        </svg>
+
+                        <time datetime={post.start_at}>{post.start_at}</time>
+                    </p>
+                )
+            }
+            {
+                post.end_at && (
+                    <p class="badge badge-ghost bg-base-300 fill-base-content text-base-content text-xs font-bold">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="16px"
+                            viewBox="0 -960 960 960"
+                            width="16px"
+                            aria-hidden="true"
+                        >
+                            <path d="M509-269q-29-29-29-71t29-71q29-29 71-29t71 29q29 29 29 71t-29 71q-29 29-71 29t-71-29ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-40q0-17 11.5-28.5T280-880q17 0 28.5 11.5T320-840v40h320v-40q0-17 11.5-28.5T680-880q17 0 28.5 11.5T720-840v40h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Z" />
+                        </svg>
+
+                        <time datetime={post.end_at}>{post.end_at}</time>
+                    </p>
+                )
+            }
+
+            {
+                post.status && (
+                    <p class={`badge ${statusColor} text-xs font-bold`}>
+                        <span>{statusText}</span>
+                    </p>
+                )
+            }
+        </div>
+    </div>
+
+    {
+        post.thumbnail && (
+            <a
+                href={`/${locale}/project/${post.slug}`}
+                tabindex={-1}
+                aria-hidden="true"
+            >
+                <img
+                    src={post.thumbnail}
+                    alt={`${post.title} thumbnail`}
+                    class="w-full rounded-xl"
+                />
+            </a>
+        )
+    }
+</article>

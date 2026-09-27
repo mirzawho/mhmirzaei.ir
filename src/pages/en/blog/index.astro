@@ -1,8 +1,9 @@
 ---
-import Article from "../../../components/ArticleCard.astro";
+import ArticleCard from "../../../components/ArticleCard.astro";
 import Layout from "../../../layouts/Layout.astro";
-import blog from "../../../lib/blog";
+import { MirzaContent, type IContentBlog } from "../../../lib/content";
 
+const blog = new MirzaContent<IContentBlog>("blog");
 const posts = await blog.posts("en");
 ---
 
@@ -26,6 +27,6 @@ const posts = await blog.posts("en");
             <h1 class="text-2xl font-bold">My articles</h1>
         </div>
 
-        {posts.map((post) => <Article post={post} />)}
+        {posts.map((post) => <ArticleCard post={post} />)}
     </section>
 </Layout>
