@@ -58,7 +58,7 @@ const statusColor = PROJECT_STATUS_COLORS[post.status] ?? "badge-ghost";
         ],
     }}
 >
-    <article class="flex flex-col gap-4 contained mx-auto sm:mt-[10svh]">
+    <article class="flex flex-col gap-2 contained mx-auto sm:mt-[10svh]">
         <div class="flex flex-col p-2">
             <div class="flex flex-nowrap items-center gap-2">
                 {
@@ -109,13 +109,23 @@ const statusColor = PROJECT_STATUS_COLORS[post.status] ?? "badge-ghost";
             </div>
         </div>
 
-        <p class="text-base-content/70">{post.description}</p>
+        <p class="text-base-content/70 px-2">{post.description}</p>
 
-        <div class="flex flex-wrap gap-1 mt-2">
+        <div class="flex flex-wrap gap-1 p-2">
             {
                 post.technologies.map((item) => (
-                    <p class="badge badge-ghost bg-base-300 fill-base-content text-base-content text-xs font-bold">
-                        <span>{item.toUpperCase()}</span>
+                    <p
+                        dir="ltr"
+                        class="badge badge-ghost bg-base-300 fill-base-content text-base-content text-xs font-bold"
+                    >
+                        {item.image && (
+                            <img
+                                src={item.image}
+                                alt=""
+                                class="size-4 object-contain"
+                            />
+                        )}
+                        <span>{item.text}</span>
                     </p>
                 ))
             }
@@ -137,7 +147,7 @@ const statusColor = PROJECT_STATUS_COLORS[post.status] ?? "badge-ghost";
             }
 
             {
-                post.start_at && (
+                (post.start_at || post.end_at) && (
                     <p class="badge badge-ghost bg-base-300 fill-base-content text-base-content text-xs font-bold">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -149,24 +159,16 @@ const statusColor = PROJECT_STATUS_COLORS[post.status] ?? "badge-ghost";
                             <path d="M509-269q-29-29-29-71t29-71q29-29 71-29t71 29q29 29 29 71t-29 71q-29 29-71 29t-71-29ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-40q0-17 11.5-28.5T280-880q17 0 28.5 11.5T320-840v40h320v-40q0-17 11.5-28.5T680-880q17 0 28.5 11.5T720-840v40h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Z" />
                         </svg>
 
-                        <time datetime={post.start_at}>{post.start_at}</time>
-                    </p>
-                )
-            }
-            {
-                post.end_at && (
-                    <p class="badge badge-ghost bg-base-300 fill-base-content text-base-content text-xs font-bold">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            height="16px"
-                            viewBox="0 -960 960 960"
-                            width="16px"
-                            aria-hidden="true"
-                        >
-                            <path d="M509-269q-29-29-29-71t29-71q29-29 71-29t71 29q29 29 29 71t-29 71q-29 29-71 29t-71-29ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-40q0-17 11.5-28.5T280-880q17 0 28.5 11.5T320-840v40h320v-40q0-17 11.5-28.5T680-880q17 0 28.5 11.5T720-840v40h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Z" />
-                        </svg>
-
-                        <time datetime={post.end_at}>{post.end_at}</time>
+                        {post.start_at && (
+                            <time datetime={post.start_at}>
+                                {post.start_at}
+                            </time>
+                        )}
+                        {post.end_at && (
+                            <time datetime={post.end_at}>
+                                {post.end_at}
+                            </time>
+                        )}
                     </p>
                 )
             }

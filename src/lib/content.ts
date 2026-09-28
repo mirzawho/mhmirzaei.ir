@@ -6,6 +6,57 @@ const AUTHOR = 'Mohammad Hossein Mirzaei';
 const CONTENT_ROOT = path.resolve('src/content');
 const THUMBNAIL_EXTENSIONS = ['png', 'jpg', 'jpeg', 'webp'] as const;
 const FAVICON_EXTENSIONS = ['ico', 'svg', 'png', 'webp', 'jpg', 'jpeg'] as const;
+const PUBLIC_ROOT = path.resolve('public');
+const LOGO_EXTENSIONS = ['png', 'svg', 'webp', 'jpg', 'jpeg'] as const;
+
+/** Words rendered fully uppercase, regardless of source casing. */
+const TECHNOLOGIES_UPPERCASE_WORDS: Record<string, string> = {
+  api: 'API',
+  cli: 'CLI',
+  css: 'CSS',
+  html: 'HTML',
+  js: 'JS',
+  json: 'JSON',
+  sql: 'SQL',
+  ui: 'UI',
+  ux: 'UX',
+  xml: 'XML',
+};
+
+/** Compound keys split at these suffixes ("tailwindcss" -> "tailwind css"); ui/ux omitted so words like "redux"/"flux" stay whole. */
+const TECHNOLOGIES_COMPOUND_SUFFIXES = [
+  'api',
+  'cli',
+  'css',
+  'html',
+  'js',
+  'json',
+  'sql',
+  'xml',
+];
+
+const techWords = (value: string): string[] =>
+  value
+    .split(/[\s_.-]+/)
+    .filter(Boolean)
+    .flatMap((word) => {
+      const lower = word.toLowerCase();
+      const suffix = TECHNOLOGIES_COMPOUND_SUFFIXES.find(
+        (s) => lower.length > s.length && lower.endsWith(s),
+      );
+      return suffix
+        ? [word.slice(0, -suffix.length), word.slice(-suffix.length)]
+        : [word];
+    });
+
+const formatTechText = (words: string[]): string =>
+  words
+    .map(
+      (word) =>
+        TECHNOLOGIES_UPPERCASE_WORDS[word.toLowerCase()] ??
+        `${word.charAt(0).toUpperCase()}${word.slice(1)}`,
+    )
+    .join(' ');
 
 const thumbnailUrls = import.meta.glob<string>(
   '/src/content/**/thumbnail.*',
@@ -37,8 +88,13 @@ export type IContentBlog = IContent;
 
 export type TWorkStatus = 'in-progress' | 'done' | 'canceled';
 
+export type IContentTechnology = {
+  text: string;
+  image: string | null;
+};
+
 export type IContentProject = IContent & {
-  technologies: string[];
+  technologies: IContentTechnology[];
   start_at: string;
   end_at?: string;
   members: number;
@@ -92,15 +148,36 @@ export class MirzaContent<T extends IContent = IContent> {
     return fs.statSync(contentPath).mtime;
   }
 
+  private resolveTechnologies(keys: string[]): IContentTechnology[] {
+    return keys.map((key) => {
+      const words = techWords(key);
+      const slug = words.map((word) => word.toLowerCase()).join('_');
+      let image: string | null = null;
+      for (const ext of LOGO_EXTENSIONS) {
+        const url = `/images/logos/${slug}.${ext}`;
+        if (fs.existsSync(path.join(PUBLIC_ROOT, url))) {
+          image = url;
+          break;
+        }
+      }
+      return { text: formatTechText(words), image };
+    });
+  }
+
   private async entryToPost(
     entry: CollectionEntry<TContentType>,
     content = false,
   ): Promise<T> {
     const [locale, ...slugParts] = entry.id.split('/');
     const slug = slugParts.join('/');
+    const rawTechnologies = (entry.data as { technologies?: string[] })
+      .technologies;
 
     const post = {
       ...entry.data,
+      ...(rawTechnologies
+        ? { technologies: this.resolveTechnologies(rawTechnologies) }
+        : {}),
       slug,
       thumbnail: this.findThumbnailUrl(locale ?? '', slug),
       favicon: this.findFaviconUrl(locale ?? '', slug),
