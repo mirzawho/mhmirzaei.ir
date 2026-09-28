@@ -27,3 +27,5 @@ pnpm-debug.log*
 public/llm.txt
 public/robots.txt
 public/sitemap.xml
+
+src/content/.obsidian
